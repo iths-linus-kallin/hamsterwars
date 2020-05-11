@@ -1,19 +1,19 @@
 // IMPORTERA FUNKTIONALITET
 const express = require('express');
 const app = express();
+const { auth, db } = require('./firebase');
 
 // GÖR OM POSTS TILL JSON
 app.use(express.json());
 
 // SERVE PUBLIC-MAPP
-app.use('/', './public')
+app.use('/', express.static('./public'))
+app.use('/assets', express.static('./hamsters'))
 
 // MIDDLEWARE
 
 
 // ROUTES
-const assetsRoute = require('./routes/assets')
-app.use('/assets', assetsRoute)
 const hamstersRoute = require('./routes/hamsters')
 app.use('/hamsters', hamstersRoute)
 const chartsRoute = require('./routes/charts')
