@@ -1,7 +1,7 @@
 // Imports
 const firestoreService = require('firestore-export-import');
-const firebaseConfig = require('./config.js');
-const serviceAccount = require('./serviceAccount.json');
+const firebaseConfig = require('../config.js');
+const serviceAccount = require('../serviceAccount.json');
 
 // JSON To Firestore
 const jsonToFirestore = async () => {
@@ -10,7 +10,7 @@ const jsonToFirestore = async () => {
     await firestoreService.initializeApp(serviceAccount, firebaseConfig.databaseURL);
     console.log('Firebase Initialized');
 
-    await firestoreService.restore('./data-clean/firebase/users.json');
+    await firestoreService.restore('./data.json');
     console.log('Upload Success');
   }
   catch (error) {
