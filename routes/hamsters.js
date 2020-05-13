@@ -1,7 +1,9 @@
 const { Router } = require('express')
-const { db, auth } = require('./../firebase');
+const { db } = require('./../firebase');
 
 const router = new Router();
+
+// GET ALL
 
 router.get('/', async (req, res) => {
     
@@ -15,6 +17,24 @@ router.get('/', async (req, res) => {
     
     res.status(200).send(hamsters)
 })
+
+// GET RANDOM
+
+router.get('/random', async (req, res) => {
+
+    let hamsters = await db.collection("hamsters").get()
+
+    let randId = Math.floor(Math.random()*hamsters._size)
+    
+    let snapshot = await db.collection('hamsters').where("id", "==", randId).get()
+    
+        snapshot.forEach(hamster => {
+
+            res.status(200).send({ randomHamster: hamster.data() })            
+        });
+})
+
+// GET ONE
 
 router.get('/:id', async (req, res) => {
 
@@ -36,55 +56,36 @@ router.get('/:id', async (req, res) => {
     res.status(200).send(hamsters)
 })
 
-router.put('/:id/result', async (req, res) => {
+// UPDATE GAMES / WINS / DEFEATS
+
+router.put('/:id/results', async (req, res) => {
     
     let id = parseInt(req.params.id)
 
-    await db.collection('hamsters').where("id", "==", id).update({
-        games: 5
-    })
+    try {
 
-    // await db.collection('hamsters').where("id", "==", id).update({
-    //     wins, defeats
-    // })
+        let results = await db.collection('hamsters').where("id", "==", id).get()
+        results.forEach(hamster => {
 
-    res.status(200).send('Hamster wins/defeats/games updated!')
+            let data = hamster.data()
+            let wins = data.wins + req.body.wins
+            let defeats = data.defeats + req.body.defeats
+
+            db.collection('hamsters').doc(hamster.id).update({
+                games: data.games++,
+                wins: wins,
+                defeats: defeats
+            })
+            .then(() => {
+                res.status(200).send('Hamster wins/defeats/games updated!')
+            })
+        })
+    }
+    catch(err){
+        console.log(err);
+        
+    }
+        
 })
-
-router.get('/random', async (req, res) => {
-    
-    let id = parseInt(4)
-    
-    let hamsters = []
-    console.log('hej');
-
-    await db.collection('hamsters').where("id", "==", id).get()
-    .then(snapshot => {
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        } 
-    
-        snapshot.forEach(hamster => {
-            hamsters.push(hamster.data());
-        });
-    })
-
-    // await function randomHamster(){
-        
-    //     let array = []
-
-    //     let snapShot = db.collection('hamsters').get()
-        
-    //     snapShot.forEach(hamster => {
-    //         array.push(hamster.data());
-    //     });
-        
-    //     return Math.floor(Math.random() * Math.floor(array.length))
-    // }
-
-    res.status(200).send(hamsters)
-})
-
 
 module.exports = router

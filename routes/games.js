@@ -1,7 +1,9 @@
 const {Router} = require('express')
-const { auth, db } = require('./../firebase');
+const { db } = require('./../firebase');
 
 const router = new Router();
+
+// GET ALL GAMES
 
 router.get('/', async (req, res) => {
 
@@ -18,19 +20,19 @@ router.get('/', async (req, res) => {
     res.status(200).send(games)
 })
 
+// POST GAME
+
 router.post('/', async (req, res) => {
     
-    await db.collection('games').doc().set({
-        id: 2,
-        timeStamp: new Date(Date.now()),
-        contestants: [
-            { id: 1 },
-            { id: 2 }
-        ],
-        winner: { id: 1 }
-    })
+        db.collection('games').doc().set({
+            id: req.body.id,
+            timeStamp: new Date(Date.now()),
+            contestants: req.body.contestants,
+            winner: req.body.winner
+        })
 
-    res.status(200).send('DB updated with new game!')
+        res.status(200).send('DB updated with new game!')
+
 })
 
 module.exports = router
