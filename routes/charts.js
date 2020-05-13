@@ -23,7 +23,7 @@ router.get('/top', async (req, res) => {
 
         let topFive = sortedHamsters.slice(-5)
         
-        res.status(200).send(topFive)
+        res.status(200).send({topFiveHamsters: topFive})
     }
     catch(err){
         console.log(err);
@@ -49,7 +49,7 @@ router.get('/bottom', async (req, res) => {
 
         let bottomFive = sortedHamsters.slice(0, 5)
         
-        res.status(200).send(bottomFive)
+        res.status(200).send({bottomFiveHamsters: bottomFive})
     }
     catch(err){
         console.log(err);
