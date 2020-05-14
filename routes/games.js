@@ -30,15 +30,44 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     
     try{
+        let games = []
+        let results = await db.collection('games').get()
+        
+        results.forEach(game => {
 
-        db.collection('games').doc().set({
-            id: req.body.id,
-            timeStamp: new Date(Date.now()),
-            contestants: req.body.contestants,
-            winner: req.body.winner
+            games.push(game.data())
         })
+        console.log(games);
+        
+        if(games === undefined || games.length == 0){
+            db.collection('games').doc().set({
+                id: 1,
+                timeStamp: new Date(Date.now()),
+                contestants: req.body.contestants,
+                winner: req.body.winner
+            })
+            
+            res.status(200).send('DB updated with your first game!')
 
-        res.status(200).send('DB updated with new game!')
+        } else {
+
+            let sortedGames = _.sortBy(games, 'id')
+            let highestId = sortedGames.slice(-1)
+            let newId = []
+            for(id of highestId){
+                newId.push(id.id) 
+            }
+                
+
+            db.collection('games').doc().set({
+                id: parseInt(newId)+1,
+                timeStamp: new Date(Date.now()),
+                contestants: req.body.contestants,
+                winner: req.body.winner
+            })
+
+            res.status(200).send('DB updated with new game!')
+        }   
         
     }
     catch(err) {
