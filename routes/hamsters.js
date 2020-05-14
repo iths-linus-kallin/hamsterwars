@@ -23,7 +23,6 @@ router.get('/', async (req, res) => {
 router.get('/random', async (req, res) => {
 
     let hamsters = await db.collection("hamsters").get()
-
     let randId = Math.floor(Math.random()*hamsters._size)
     
     let snapshot = await db.collection('hamsters').where("id", "==", randId).get()
@@ -41,17 +40,16 @@ router.get('/:id', async (req, res) => {
     let id = parseInt(req.params.id)
     let hamsters = []
     
-    await db.collection('hamsters').where("id", "==", id).get()
-    .then(snapshot => {
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        } 
+    let snapshot = await db.collection('hamsters').where("id", "==", id).get()
     
-        snapshot.forEach(hamster => {
-            hamsters.push(hamster.data());
-        });
-    })
+    if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+    } 
+
+    snapshot.forEach(hamster => {
+        hamsters.push(hamster.data());
+    });
 
     res.status(200).send(hamsters)
 })

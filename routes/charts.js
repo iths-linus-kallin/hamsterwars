@@ -11,13 +11,11 @@ router.get('/top', async (req, res) => {
     try{
         let hamsters = []
         
-        await db.collection('hamsters').get()
-        .then(snapshot => {
+        let snapshot = await db.collection('hamsters').get()
             
-            snapshot.forEach(hamster => {
-                hamsters.push(hamster.data());
-            });
-        })
+        snapshot.forEach(hamster => {
+            hamsters.push(hamster.data());
+        });
 
         let sortedHamsters = _.sortBy(hamsters, 'wins')
 
@@ -37,13 +35,11 @@ router.get('/bottom', async (req, res) => {
     try{
         let hamsters = []
         
-        await db.collection('hamsters').get()
-        .then(snapshot => {
+        let snapshot = await db.collection('hamsters').get()
             
-            snapshot.forEach(hamster => {
-                hamsters.push(hamster.data());
-            });
-        })
+        snapshot.forEach(hamster => {
+            hamsters.push(hamster.data());
+        });
 
         let sortedHamsters = _.sortBy(hamsters, 'wins')
 

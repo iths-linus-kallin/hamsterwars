@@ -9,13 +9,11 @@ router.get('/', async (req, res) => {
 
     let games = []
 
-    await db.collection('games').get()
-    .then(snapshot => {
+    let snapshot = await db.collection('games').get()
         
         snapshot.forEach(game => {
             games.push(game.data());
           });
-    })
 
     res.status(200).send(games)
 })
@@ -23,7 +21,7 @@ router.get('/', async (req, res) => {
 // POST GAME
 
 router.post('/', async (req, res) => {
-    
+
         db.collection('games').doc().set({
             id: req.body.id,
             timeStamp: new Date(Date.now()),
@@ -32,7 +30,6 @@ router.post('/', async (req, res) => {
         })
 
         res.status(200).send('DB updated with new game!')
-
 })
 
 module.exports = router

@@ -10,13 +10,11 @@ router.get('/total', async (req, res) => {
 
     let games = []
 
-    await db.collection('games').get()
-    .then(snapshot => {
+    let snapshot = await db.collection('games').get()
         
-        snapshot.forEach(game => {
-            games.push(game.data());
-          });
-    })
+    snapshot.forEach(game => {
+        games.push(game.data());
+    });
     
     let statsObj = {
         totalGames: games.length,
@@ -31,13 +29,11 @@ router.get('/favfood', async (req, res) => {
 
     let hamsters = []
 
-    await db.collection('hamsters').get()
-    .then(snapshot => {
+    let snapshot = await db.collection('hamsters').get()
         
-        snapshot.forEach(hamster => {
-            hamsters.push(hamster.data());
-          });
-    })
+    snapshot.forEach(hamster => {
+        hamsters.push(hamster.data());
+    });
     
     let tagArray = _.pluck(hamsters,'favFood')
     let mostFavFood = _.chain(tagArray).countBy().pairs().max(_.last).head().value();
