@@ -8,41 +8,54 @@ const router = new Router();
 
 router.get('/total', async (req, res) => {
 
-    let games = []
+    try{
+        let games = []
 
-    let snapshot = await db.collection('games').get()
+        let snapshot = await db.collection('games').get()
+            
+        snapshot.forEach(game => {
+            games.push(game.data());
+        });
         
-    snapshot.forEach(game => {
-        games.push(game.data());
-    });
-    
-    let statsObj = {
-        totalGames: games.length,
+        let statsObj = {
+            totalGames: games.length,
+        }
+
+        res.status(200).send(statsObj)
+
+    }
+    catch(err){
+        console.error(err);
     }
 
-    res.status(200).send(statsObj)
 })
 
 // GET FAVFOOD STATS
 
 router.get('/favfood', async (req, res) => {
 
-    let hamsters = []
+    try{
+        let hamsters = []
 
-    let snapshot = await db.collection('hamsters').get()
+        let snapshot = await db.collection('hamsters').get()
+            
+        snapshot.forEach(hamster => {
+            hamsters.push(hamster.data());
+        });
         
-    snapshot.forEach(hamster => {
-        hamsters.push(hamster.data());
-    });
-    
-    let tagArray = _.pluck(hamsters,'favFood')
-    let mostFavFood = _.chain(tagArray).countBy().pairs().max(_.last).head().value();
-    
-    let statsObj = {
-        mostFavFood: mostFavFood
-    }
+        let tagArray = _.pluck(hamsters,'favFood')
+        let mostFavFood = _.chain(tagArray).countBy().pairs().max(_.last).head().value();
+        
+        let statsObj = {
+            mostFavFood: mostFavFood
+        }
 
-    res.status(200).send(statsObj)
+        res.status(200).send(statsObj)
+
+    }
+    catch(err){
+        console.error(err);  
+    }
 })
 
 module.exports = router

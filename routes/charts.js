@@ -18,13 +18,12 @@ router.get('/top', async (req, res) => {
         });
 
         let sortedHamsters = _.sortBy(hamsters, 'wins')
-
         let topFive = sortedHamsters.slice(-5)
         
         res.status(200).send({topFiveHamsters: topFive})
     }
     catch(err){
-        console.log(err);
+        console.error(err);
     }
 })
 
@@ -48,7 +47,7 @@ router.get('/bottom', async (req, res) => {
         res.status(200).send({bottomFiveHamsters: bottomFive})
     }
     catch(err){
-        console.log(err);
+        console.error(err);
     }
 })
 

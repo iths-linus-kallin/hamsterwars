@@ -1,5 +1,6 @@
 const {Router} = require('express')
 const { db } = require('./../firebase');
+const _ = require('underscore');
 
 const router = new Router();
 
@@ -7,6 +8,7 @@ const router = new Router();
 
 router.get('/', async (req, res) => {
 
+    try{
     let games = []
 
     let snapshot = await db.collection('games').get()
@@ -16,11 +18,19 @@ router.get('/', async (req, res) => {
           });
 
     res.status(200).send(games)
+    }
+    catch(err){
+        console.error(err);
+        
+    }
 })
 
 // POST GAME
 
 router.post('/', async (req, res) => {
+
+    
+    try{
 
         db.collection('games').doc().set({
             id: req.body.id,
@@ -30,6 +40,10 @@ router.post('/', async (req, res) => {
         })
 
         res.status(200).send('DB updated with new game!')
+    }
+    catch(err) {
+        console.error(err);
+    }
 })
 
 module.exports = router
