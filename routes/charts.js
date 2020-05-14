@@ -32,8 +32,8 @@ router.get('/top', async (req, res) => {
 router.get('/bottom', async (req, res) => {
 
     try{
+
         let hamsters = []
-        
         let snapshot = await db.collection('hamsters').get()
             
         snapshot.forEach(hamster => {
@@ -41,7 +41,6 @@ router.get('/bottom', async (req, res) => {
         });
 
         let sortedHamsters = _.sortBy(hamsters, 'wins')
-
         let bottomFive = sortedHamsters.slice(0, 5)
         
         res.status(200).send({bottomFiveHamsters: bottomFive})

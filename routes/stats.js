@@ -9,6 +9,7 @@ const router = new Router();
 router.get('/total', async (req, res) => {
 
     try{
+        
         let games = []
 
         let snapshot = await db.collection('games').get()

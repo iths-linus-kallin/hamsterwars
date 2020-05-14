@@ -76,7 +76,7 @@ router.put('/:id/results', async (req, res) => {
     let id = parseInt(req.params.id)
 
     try {
-
+        
         let results = await db.collection('hamsters').where("id", "==", id).get()
         results.forEach(hamster => {
 

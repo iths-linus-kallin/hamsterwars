@@ -28,7 +28,6 @@ router.get('/', async (req, res) => {
 // POST GAME
 
 router.post('/', async (req, res) => {
-
     
     try{
 
@@ -40,6 +39,7 @@ router.post('/', async (req, res) => {
         })
 
         res.status(200).send('DB updated with new game!')
+        
     }
     catch(err) {
         console.error(err);
